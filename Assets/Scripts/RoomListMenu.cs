@@ -19,6 +19,8 @@ public class RoomListMenu : MonoBehaviourPunCallbacks
         {
             if (info.RemovedFromList)
             {
+                Debug.Log("Removed from list!!!!!!!");
+                
                 int index = _listings.FindIndex(x => x.Info.Name == info.Name);
                 if (index != -1)
                 {
@@ -26,19 +28,37 @@ public class RoomListMenu : MonoBehaviourPunCallbacks
                     _listings.RemoveAt(index);
                 }
             }
-            else
+            else 
             {
-                RoomListing listing = Instantiate(_roomListing, _content);
-                if (listing != null)
+                
+                int index = _listings.FindIndex(x => x.Info.Name == info.Name);
+                
+                if (index != -1) // room exist - than update
                 {
-                    listing.SetRoomInfo(info);
-                    _listings.Add(listing);
+                    _listings[index].SetRoomInfo(info);
+
+                    if (info.PlayerCount == 0)
+                    {
+                        Destroy((_listings[index].gameObject));
+                        _listings.RemoveAt(index);
+                    }
+                        
+                }
+                else // room doesnt exist - create new listing
+                {
+                    RoomListing listing = Instantiate(_roomListing, _content);
+                    if (listing != null)
+                    {
+                        listing.SetRoomInfo(info);
+                        _listings.Add(listing);
+                    }
                 }
             }
+            
             
 
         }
     }
-    
-   
+
+
 }

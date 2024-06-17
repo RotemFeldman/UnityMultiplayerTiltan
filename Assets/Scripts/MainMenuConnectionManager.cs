@@ -10,8 +10,12 @@ using UnityEngine.UI;
 
 public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
 {
+    [HideInInspector] public static string NickName { get; private set; }
+    
+    
     [Header("UI")]
     [SerializeField] private GameObject _connectScreen;
+    [SerializeField] private TMP_InputField _nickNameInputField;
     
     [Space(10)]
     [SerializeField] private GameObject _joinLobbyScreen;
@@ -40,6 +44,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
 
     public void Connect()
     {
+        PhotonNetwork.NickName = _nickNameInputField.text;
         PhotonNetwork.ConnectUsingSettings();
     }
 
@@ -119,8 +124,13 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
 
     public void LeaveRoom()
     {
-        if (PhotonNetwork.InRoom)
-            PhotonNetwork.LeaveRoom();
+        if (!PhotonNetwork.InRoom)
+            return;
+
+        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
+            PhotonNetwork.CurrentRoom.RemovedFromList = true;
+        
+        PhotonNetwork.LeaveRoom();
     }
 
     public override void OnLeftRoom()

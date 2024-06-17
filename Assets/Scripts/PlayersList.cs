@@ -10,26 +10,33 @@ public class PlayersList : MonoBehaviourPunCallbacks
 {
     [SerializeField] private TextMeshProUGUI _playersList;
 
-    private Dictionary<int,Player> _players = new Dictionary<int, Player>();
 
-    private void Update()
+    public override void OnPlayerEnteredRoom(Player newPlayer)
     {
-        UpdatePlayers();
+        base.OnPlayerEnteredRoom(newPlayer);
+        UpdatePlayersList();
+
     }
 
-    private void UpdatePlayers()
+    public override void OnPlayerLeftRoom(Player otherPlayer)
     {
-        if (PhotonNetwork.CurrentRoom.Players.Count != _players.Count)
-        {
-            _playersList.text = string.Empty;
-            
-            _players = PhotonNetwork.CurrentRoom.Players;
+        base.OnPlayerLeftRoom(otherPlayer);
+        UpdatePlayersList();
+    }
 
-            foreach (var p in _players)
-            {
-                _playersList.text += p.Value.ToString() + "\n";
-            }
+    private void UpdatePlayersList()
+    {
+        _playersList.text = "Current Players:\n";
+        
+        foreach (var player in PhotonNetwork.CurrentRoom.Players)
+        {
+            Debug.Log(player.Value.NickName);
+            _playersList.text += player.Value.NickName + "\n";
         }
     }
 
+    private void Start()
+    {
+       UpdatePlayersList();
+    }
 }
