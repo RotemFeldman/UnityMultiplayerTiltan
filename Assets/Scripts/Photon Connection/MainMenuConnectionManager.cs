@@ -10,55 +10,27 @@ using UnityEngine.UI;
 
 public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
 {
-    
-    
-    [Header("UI")]
-    [SerializeField] private GameObject _connectScreen;
-    [SerializeField] private TMP_InputField _nickNameInputField;
-    
-    [Space(10)]
-    [SerializeField] private GameObject _joinLobbyScreen;
-    [SerializeField] private TMP_InputField _lobbyInputField;
-    
-    [Space(10)]
-    [SerializeField] private GameObject _joinRoomScreen;
-    [SerializeField] private TMP_InputField _roomNameInputField;
-    [SerializeField] private TMP_InputField _roomMaxPlayersInputField;
-    
-    [Space(10)]
-    [SerializeField] private GameObject _inRoomScreen;
-    
-    [Space(10)]
-    [SerializeField] private TextMeshProUGUI _debugPhotonText;
-    
 
-    private enum UIScreen
-    {
-        Connect,
-        JoinLobby,
-        JoinRoom,
-        InRoom
-    }
+    private UIManager _uiManager;
     
-
     public void Connect()
     {
-        PhotonNetwork.NickName = _nickNameInputField.text;
+        PhotonNetwork.NickName = _uiManager.NickNameInputField.text;
         PhotonNetwork.ConnectUsingSettings();
     }
 
     public void JoinLobby()
     {
-        PhotonNetwork.JoinLobby(new TypedLobby(_lobbyInputField.text, LobbyType.Default));
+        PhotonNetwork.JoinLobby(new TypedLobby(_uiManager.LobbyInputField.text, LobbyType.Default));
     }
 
     public void CreateRoom()
     {
         RoomOptions ro = new RoomOptions();
-        if (int.TryParse(_roomMaxPlayersInputField.text, out int result) && result > 0)
+        if (int.TryParse(_uiManager.RoomMaxPlayersInputField.text, out int result) && result > 0)
         {
             ro.MaxPlayers = result;
-            PhotonNetwork.CreateRoom(_roomNameInputField.text,ro);
+            PhotonNetwork.CreateRoom(_uiManager.RoomNameInputField.text,ro);
         }
         else
         {
@@ -73,7 +45,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
         Debug.Log(this + "Photon connection successful");
         base.OnConnectedToMaster();
         
-        SwitchUIScreen(UIScreen.JoinLobby);
+        _uiManager.SwitchUIScreen(UIManager.UIScreen.JoinLobby);
             
     }
 
@@ -82,7 +54,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
         base.OnDisconnected(cause);
         Debug.Log("Disconnected from master. " + cause.ToString());
         
-        SwitchUIScreen(UIScreen.Connect);
+        _uiManager.SwitchUIScreen(UIManager.UIScreen.Connect);
     }
 
     public override void OnJoinedLobby()
@@ -90,7 +62,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
         base.OnJoinedLobby();
         Debug.Log("Successfully joined lobby " + PhotonNetwork.CurrentLobby.Name);
         
-        SwitchUIScreen(UIScreen.JoinRoom);
+        _uiManager.SwitchUIScreen(UIManager.UIScreen.JoinRoom);
         
     }
     
@@ -104,7 +76,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
         base.OnJoinedRoom();
         Debug.Log("Successfully joined room " + PhotonNetwork.CurrentRoom.ToString());
         
-        SwitchUIScreen(UIScreen.InRoom);
+        _uiManager.SwitchUIScreen(UIManager.UIScreen.InRoom);
     }
     
 
@@ -133,44 +105,23 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
         base.OnLeftRoom();
         Debug.Log("Left Room");
         
-        SwitchUIScreen(UIScreen.JoinRoom);
+        _uiManager.SwitchUIScreen(UIManager.UIScreen.JoinRoom);
     }
 
+    public override void OnLeftLobby()
+    {
+        base.OnLeftLobby();
+        Debug.Log("left lobby");
+    }
 
     private void Start()
     {
-        SwitchUIScreen(UIScreen.Connect);
-        
+        _uiManager = UIManager.Instance;
     }
 
     private void Update()
     {
-        _debugPhotonText.text = PhotonNetwork.NetworkClientState.ToString();
+        if(PhotonNetwork.InLobby)
+            Debug.Log("in lobby");
     }
-
-    private void SwitchUIScreen(UIScreen screen)
-    {
-        _connectScreen.SetActive(false);
-        _joinRoomScreen.SetActive(false);
-        _joinLobbyScreen.SetActive(false);
-        _inRoomScreen.SetActive(false);
-
-        switch (screen)
-        {
-            case UIScreen.Connect:
-                _connectScreen.SetActive(true);
-                break;
-            case UIScreen.InRoom:
-                _inRoomScreen.SetActive(true);
-                break;
-            case UIScreen.JoinLobby:
-                _joinLobbyScreen.SetActive(true);
-                break;
-            case UIScreen.JoinRoom:
-                _joinRoomScreen.SetActive(true);
-                break;
-            
-        }
-    }
-    
 }

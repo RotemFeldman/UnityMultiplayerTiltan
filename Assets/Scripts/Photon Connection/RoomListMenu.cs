@@ -11,6 +11,19 @@ public class RoomListMenu : MonoBehaviourPunCallbacks
 
     private List<RoomListing> _listings = new List<RoomListing>();
 
+
+    public override void OnJoinedLobby()
+    {
+
+        base.OnJoinedLobby();
+        foreach (var listing in _listings)
+        {
+            Destroy(listing.gameObject);
+        }
+        _listings.Clear();
+    }
+    
+
     public override void OnRoomListUpdate(List<RoomInfo> roomList)
     {
         base.OnRoomListUpdate(roomList);

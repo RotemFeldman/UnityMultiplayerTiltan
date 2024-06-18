@@ -2042,15 +2042,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0fbfbac1ecd25744b27da24c6722adf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _connectScreen: {fileID: 1408864104}
-  _nickNameInputField: {fileID: 519629863}
-  _joinLobbyScreen: {fileID: 72771468}
-  _lobbyInputField: {fileID: 185242776}
-  _joinRoomScreen: {fileID: 1452076488}
-  _roomNameInputField: {fileID: 1346093667}
-  _roomMaxPlayersInputField: {fileID: 980868252}
-  _inRoomScreen: {fileID: 2085458156}
-  _debugPhotonText: {fileID: 1482412695}
 --- !u!4 &907107472
 Transform:
   m_ObjectHideFlags: 0
@@ -3507,7 +3498,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1452076489
 RectTransform:
   m_ObjectHideFlags: 0
@@ -4608,6 +4599,59 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1920185371}
   m_CullTransparentMesh: 1
+--- !u!1 &1989864685
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1989864687}
+  - component: {fileID: 1989864686}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1989864686
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1989864685}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d60260a05041f63438a940a7b9127223, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _connectScreen: {fileID: 1408864104}
+  NickNameInputField: {fileID: 519629863}
+  _joinLobbyScreen: {fileID: 72771468}
+  LobbyInputField: {fileID: 185242776}
+  _joinRoomScreen: {fileID: 1452076488}
+  RoomNameInputField: {fileID: 1346093667}
+  RoomMaxPlayersInputField: {fileID: 980868252}
+  _inRoomScreen: {fileID: 2085458156}
+  _debugPhotonText: {fileID: 1482412695}
+--- !u!4 &1989864687
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1989864685}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 862.8298, y: 450.72263, z: 4.899012}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2085458156
 GameObject:
   m_ObjectHideFlags: 0
@@ -4802,5 +4846,6 @@ SceneRoots:
   - {fileID: 410087041}
   - {fileID: 832575519}
   - {fileID: 907107472}
+  - {fileID: 1989864687}
   - {fileID: 1447578299}
   - {fileID: 1463237799}
