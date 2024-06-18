@@ -126,9 +126,6 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
     {
         if (!PhotonNetwork.InRoom)
             return;
-
-        if (PhotonNetwork.CurrentRoom.PlayerCount == 1)
-            PhotonNetwork.CurrentRoom.RemovedFromList = true;
         
         PhotonNetwork.LeaveRoom();
     }
