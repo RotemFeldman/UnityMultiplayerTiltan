@@ -10,7 +10,6 @@ using UnityEngine.UI;
 
 public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
 {
-    [HideInInspector] public static string NickName { get; private set; }
     
     
     [Header("UI")]
@@ -74,9 +73,8 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
         Debug.Log(this + "Photon connection successful");
         base.OnConnectedToMaster();
         
-        
         SwitchUIScreen(UIScreen.JoinLobby);
-        
+            
     }
 
     public override void OnDisconnected(DisconnectCause cause)
