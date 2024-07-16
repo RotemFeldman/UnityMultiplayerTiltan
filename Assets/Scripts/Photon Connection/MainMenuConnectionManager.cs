@@ -10,7 +10,8 @@ using UnityEngine.UI;
 
 public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
 {
-
+    private const string GAME_SCENE = "GameScene";
+    
     private UIManager _uiManager;
     
     public void Connect()
@@ -46,13 +47,16 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
         base.OnConnectedToMaster();
         
         _uiManager.SwitchUIScreen(UIManager.UIScreen.JoinLobby);
+        
+        if(!PhotonNetwork.InLobby)
+            JoinLobby();
             
     }
 
     public override void OnDisconnected(DisconnectCause cause)
     {
         base.OnDisconnected(cause);
-        Debug.Log("Disconnected from master. " + cause.ToString());
+        Debug.Log("Disconnected from master. " + cause);
         
         _uiManager.SwitchUIScreen(UIManager.UIScreen.Connect);
     }
@@ -74,7 +78,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
     public override void OnJoinedRoom()
     {
         base.OnJoinedRoom();
-        Debug.Log("Successfully joined room " + PhotonNetwork.CurrentRoom.ToString());
+        Debug.Log("Successfully joined room " + PhotonNetwork.CurrentRoom);
         
         _uiManager.SwitchUIScreen(UIManager.UIScreen.InRoom);
     }
@@ -114,14 +118,19 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
         Debug.Log("left lobby");
     }
 
+    public void StartGame()
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.LoadLevel(GAME_SCENE);
+        }
+    }
+
     private void Start()
     {
         _uiManager = UIManager.Instance;
+        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
-    private void Update()
-    {
-        if(PhotonNetwork.InLobby)
-            Debug.Log("in lobby");
-    }
+
 }

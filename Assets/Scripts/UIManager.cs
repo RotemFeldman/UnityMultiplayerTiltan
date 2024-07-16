@@ -2,27 +2,33 @@ using System;
 using UnityEngine;
 using TMPro;
 using Photon.Pun;
+using UnityEngine.UI;
 
-public class UIManager : MonoBehaviour
+public class UIManager : MonoBehaviourPunCallbacks
 {
 
     public static UIManager Instance;
     
+    // connect server
     [Header("UI")]
     [SerializeField] private GameObject _connectScreen;
     [SerializeField] public TMP_InputField NickNameInputField;
     
+    // join lobby
     [Space(10)]
     [SerializeField] private GameObject _joinLobbyScreen;
     [SerializeField] public TMP_InputField LobbyInputField;
     
+    // join room
     [Space(10)]
     [SerializeField] private GameObject _joinRoomScreen;
     [SerializeField] public TMP_InputField RoomNameInputField;
     [SerializeField] public TMP_InputField RoomMaxPlayersInputField;
     
+    // in room
     [Space(10)]
     [SerializeField] private GameObject _inRoomScreen;
+    [SerializeField] private Button _startGameButton;
     
     [Space(10)]
     [SerializeField] private TextMeshProUGUI _debugPhotonText;
@@ -51,7 +57,13 @@ public class UIManager : MonoBehaviour
 
     private void Start()
     {
+       
         SwitchUIScreen(UIScreen.Connect);
+
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            _startGameButton.enabled = false;
+        }
         
     }
     
@@ -74,6 +86,7 @@ public class UIManager : MonoBehaviour
                 break;
             case UIScreen.InRoom:
                 _inRoomScreen.SetActive(true);
+                _startGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
                 break;
             case UIScreen.JoinLobby:
                 _joinLobbyScreen.SetActive(true);
@@ -84,4 +97,6 @@ public class UIManager : MonoBehaviour
             
         }
     }
+
+    
 }
