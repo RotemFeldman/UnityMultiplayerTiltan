@@ -47,6 +47,7 @@ public class PlayersList : MonoBehaviourPunCallbacks
     
     private void StartGameButtonUpdate()
     {
+        _startGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
         if(!PhotonNetwork.IsMasterClient)
             return;
         

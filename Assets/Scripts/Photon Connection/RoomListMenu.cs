@@ -32,7 +32,6 @@ public class RoomListMenu : MonoBehaviourPunCallbacks
         {
             if (info.RemovedFromList)
             {
-                Debug.Log("Removed from list!!!!!!!");
                 
                 int index = _listings.FindIndex(x => x.Info.Name == info.Name);
                 if (index != -1)

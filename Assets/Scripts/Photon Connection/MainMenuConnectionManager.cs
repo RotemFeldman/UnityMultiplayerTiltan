@@ -17,6 +17,7 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
     public void Connect()
     {
         PhotonNetwork.NickName = _uiManager.NickNameInputField.text;
+        PhotonNetwork.AutomaticallySyncScene = true;
         PhotonNetwork.ConnectUsingSettings();
     }
 
@@ -120,8 +121,10 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
 
     public void StartGame()
     {
+        Debug.Log("is master client = " + PhotonNetwork.IsMasterClient);
         if (PhotonNetwork.IsMasterClient)
         {
+            Debug.Log("Entered if");
             PhotonNetwork.LoadLevel(GAME_SCENE);
         }
     }
@@ -129,7 +132,6 @@ public class MainMenuConnectionManager : MonoBehaviourPunCallbacks
     private void Start()
     {
         _uiManager = UIManager.Instance;
-        PhotonNetwork.AutomaticallySyncScene = true;
     }
 
 

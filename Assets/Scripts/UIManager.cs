@@ -28,7 +28,6 @@ public class UIManager : MonoBehaviourPunCallbacks
     // in room
     [Space(10)]
     [SerializeField] private GameObject _inRoomScreen;
-    [SerializeField] private Button _startGameButton;
     
     [Space(10)]
     [SerializeField] private TextMeshProUGUI _debugPhotonText;
@@ -59,11 +58,6 @@ public class UIManager : MonoBehaviourPunCallbacks
     {
        
         SwitchUIScreen(UIScreen.Connect);
-
-        if (!PhotonNetwork.IsMasterClient)
-        {
-            _startGameButton.enabled = false;
-        }
         
     }
     
@@ -86,7 +80,6 @@ public class UIManager : MonoBehaviourPunCallbacks
                 break;
             case UIScreen.InRoom:
                 _inRoomScreen.SetActive(true);
-                _startGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
                 break;
             case UIScreen.JoinLobby:
                 _joinLobbyScreen.SetActive(true);
