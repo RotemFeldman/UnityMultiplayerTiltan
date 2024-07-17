@@ -33,13 +33,13 @@ public class Projectile : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallbac
         //TODO projectile instantiation data
     }
 
-    private void OnCollisionEnter(Collision other)
+    /*private void OnCollisionEnter(Collision other)
     {
         if (photonView.IsMine)
         {
             if (!other.gameObject.TryGetComponent(out PhotonView pv))
             {
-                Debug.Log("hit wall");
+                // hit terrain
                 PhotonNetwork.Destroy(gameObject);
                 return;
             }
@@ -48,8 +48,14 @@ public class Projectile : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallbac
             if (!pv.IsMine)
             {
                 PhotonNetwork.Destroy(gameObject);
+
+                /*if (other.gameObject.CompareTag("Player"))
+                {
+                    var p = other.gameObject.GetComponent<PlayerController>();
+                    p.ApplyDamage();
+                }#1#
             }
         }
 
-    }
+    }*/
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using Photon.Pun;
 
@@ -17,6 +18,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [Header("Projectile")]
     private const string ProjectilePrefabName = "Prefabs/Projectile";
     private const string ProjectileTag = "Projectile";
+    private const string ApplyDamage_RPC = nameof(ApplyDamage);
     
     
     private Camera _cachedCamera;
@@ -84,28 +86,43 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         //TODO implement pun observer
     }
 
+    [PunRPC]
     private void ApplyDamage()
     {
+        Debug.Log("applied damage, life left:" + hp);
         hp -= 10;
 
         if (hp <= 0)
         {
             Debug.Log("died");
-            PhotonNetwork.Destroy(gameObject);
+            
+            if(photonView.IsMine)
+                PhotonNetwork.Destroy(gameObject);
         }
     }
 
-    private void OnCollisionEnter(Collision other)
+    private void OnTriggerEnter(Collider other)
     {
-        if (photonView.IsMine)
+        if (other.CompareTag(ProjectileTag))
         {
-            if (other.gameObject.CompareTag(ProjectileTag))
-            {
-                if (other.gameObject.GetPhotonView().IsMine)
-                    return;
+            var proj = other.GetComponent<Projectile>();
+            
+            //TODO ask lior about this line, how is it different from isMine?
+            if(proj.photonView.Owner.ActorNumber == photonView.Owner.ActorNumber)
+                return;
 
-                ApplyDamage();
+            if (proj.photonView.IsMine)
+            {
+                StartCoroutine(DestroyDelay(1f,proj.gameObject));
+                photonView.RPC(ApplyDamage_RPC,RpcTarget.All);
+                proj.gameObject.SetActive(false);
             }
         }
+    }
+
+    private IEnumerator DestroyDelay(float delayTime, GameObject gameObjectToDestroy)
+    {
+        yield return new WaitForSeconds(delayTime);
+        PhotonNetwork.Destroy(gameObjectToDestroy);
     }
 }
