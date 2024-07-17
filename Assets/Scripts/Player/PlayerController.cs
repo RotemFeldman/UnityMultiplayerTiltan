@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Photon.Pun;
 
@@ -6,7 +7,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     
     private const string RecievedamageRPC = "RecieveDamage";
 
-    [SerializeField] private int HP = 100;
+    [SerializeField] private int hp = 100;
 
     [Header("Control")] 
     [SerializeField] private PlayerInputHandler inputHandler;
@@ -16,9 +17,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [Header("Projectile")]
     private const string ProjectilePrefabName = "Prefabs/Projectile";
     private const string ProjectileTag = "Projectile";
-    
-    private Quaternion _projectileSpawnQuaternion;
-    
     
     
     private Camera _cachedCamera;
@@ -64,7 +62,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             
             Vector3 directionToFace = _raycastPos - gameObject.transform.position;
             Quaternion lookAtRotation = Quaternion.LookRotation(directionToFace);
-            _projectileSpawnQuaternion = lookAtRotation;
             Vector3 eulerRotation = lookAtRotation.eulerAngles;
             eulerRotation.x = 0;
             eulerRotation.z = 0;
@@ -77,12 +74,38 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Shoot()
     {
+        var tr = transform;
         GameObject proj =
-            PhotonNetwork.Instantiate(ProjectilePrefabName, transform.position, _projectileSpawnQuaternion);
+            PhotonNetwork.Instantiate(ProjectilePrefabName, tr.position, tr.rotation);
     }
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         //TODO implement pun observer
+    }
+
+    private void ApplyDamage()
+    {
+        hp -= 10;
+
+        if (hp <= 0)
+        {
+            Debug.Log("died");
+            PhotonNetwork.Destroy(gameObject);
+        }
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        if (photonView.IsMine)
+        {
+            if (other.gameObject.CompareTag(ProjectileTag))
+            {
+                if (other.gameObject.GetPhotonView().IsMine)
+                    return;
+
+                ApplyDamage();
+            }
+        }
     }
 }
