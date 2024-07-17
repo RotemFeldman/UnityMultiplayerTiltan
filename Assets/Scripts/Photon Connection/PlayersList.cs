@@ -45,13 +45,14 @@ public class PlayersList : MonoBehaviourPunCallbacks
         StartGameButtonUpdate();
     }
     
+    //TODO return minimum players to start to 2
     private void StartGameButtonUpdate()
     {
         _startGameButton.gameObject.SetActive(PhotonNetwork.IsMasterClient);
         if(!PhotonNetwork.IsMasterClient)
             return;
         
-        _startGameButton.interactable = (PhotonNetwork.CurrentRoom.PlayerCount >= 2);
+        _startGameButton.interactable = (PhotonNetwork.CurrentRoom.PlayerCount >= 1);
     }
 
     private void Start()

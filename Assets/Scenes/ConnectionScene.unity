@@ -4905,7 +4905,6 @@ MonoBehaviour:
   RoomNameInputField: {fileID: 1346093667}
   RoomMaxPlayersInputField: {fileID: 980868252}
   _inRoomScreen: {fileID: 2085458156}
-  _startGameButton: {fileID: 1674951651}
   _debugPhotonText: {fileID: 1482412695}
 --- !u!4 &1989864687
 Transform:
