@@ -169,6 +169,7 @@ MonoBehaviour:
   hp: 100
   inputHandler: {fileID: 5462283601745861098}
   speed: 10
+  meshRenderer: {fileID: 980759786234655741}
 --- !u!114 &6010466042055092989
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DefaultNamespace;
+using NUnit.Framework;
 using Photon.Pun;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -12,15 +14,24 @@ public class MultiplayerGameManager : MonoBehaviourPun
     private const string SetSpawnPoint_RPC = nameof(SetSpawnPoint);
     private const string GameStarted_RPC = nameof(GameStarted);
 
+    private const string GetAvailableCharacters_RPC = nameof(GetAndRefreshAvailableCharacters);
+
     private PlayerController myPlayerController;
     private int playersReady;
 
     [Header("Spawn Points")]
     [SerializeField] private SpawnPoint[] spawnPoints;
 
+    [Header("Characters")]
+    [SerializeField] private SelectableCharacter[] characters;
+
+    [SerializeField] private GameObject characterSelectionScreen;
+
+    private SelectableCharacter _selectableCharacter;
+    
     private void Start()
     {
-        NotifyIsReadyToMasterClient();
+        GetAndRefreshAvailableCharacters(99);
     }
 
     public void NotifyIsReadyToMasterClient()
@@ -54,9 +65,39 @@ public class MultiplayerGameManager : MonoBehaviourPun
     {
         point.Take();
         GameObject player = PhotonNetwork.Instantiate(PlayerPrefabName, point.transform.position, point.transform.rotation);
+        var meshRend = player.GetComponent<MeshRenderer>();
+        meshRend.material.color = _selectableCharacter.charColor.color;
         myPlayerController = player.GetComponent<PlayerController>();
         myPlayerController.enabled = false;
     }
+
+    public void TakeCharacter(SelectableCharacter character)
+    {
+        
+        _selectableCharacter = character.Take();
+        characterSelectionScreen.SetActive(false);
+        
+
+        photonView.RPC(GetAvailableCharacters_RPC,RpcTarget.All,_selectableCharacter.Id);
+        NotifyIsReadyToMasterClient();
+    }
+    
+    [PunRPC]
+    private void GetAndRefreshAvailableCharacters(int idTaken)
+    {
+        if (idTaken < characters.Length)
+        {
+            characters[idTaken].Take();
+        }
+        
+        foreach (var c in characters)
+        {
+            if(c.IsTaken)
+                c.gameObject.SetActive(false);
+        }
+        
+    }
+    
 
     #region RPC's
 

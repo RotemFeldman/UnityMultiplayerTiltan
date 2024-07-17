@@ -12,13 +12,15 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     [Header("Control")] 
     [SerializeField] private PlayerInputHandler inputHandler;
-
     [SerializeField] private float speed = 10;
     
     [Header("Projectile")]
     private const string ProjectilePrefabName = "Prefabs/Projectile";
     private const string ProjectileTag = "Projectile";
     private const string ApplyDamage_RPC = nameof(ApplyDamage);
+
+    [Header("Visual")] 
+    [SerializeField] private MeshRenderer meshRenderer;
     
     
     private Camera _cachedCamera;
@@ -83,7 +85,28 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
-        //TODO implement pun observer
+        if (stream.IsWriting)
+        {
+            Color playerCol = meshRenderer.material.color;
+
+            float colR = playerCol.r;
+            float colG = playerCol.g;
+            float colB = playerCol.b;
+            float colA = playerCol.a;
+            stream.SendNext(colR);
+            stream.SendNext(colG);
+            stream.SendNext(colB);
+            stream.SendNext(colA);
+        }
+        else if (stream.IsReading)
+        {
+            Color newColor;
+            newColor.r = (float)stream.ReceiveNext();
+            newColor.g = (float)stream.ReceiveNext();
+            newColor.b = (float)stream.ReceiveNext();
+            newColor.a = (float)stream.ReceiveNext();
+            meshRenderer.material.color = newColor;
+        }
     }
 
     [PunRPC]

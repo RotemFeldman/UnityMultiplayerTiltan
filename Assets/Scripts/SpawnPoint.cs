@@ -7,7 +7,7 @@ namespace DefaultNamespace
     {
         public int Id = 0;
         
-        [SerializeField] private bool _isTaken = false;
+        private bool _isTaken = false;
         public bool IsTaken => _isTaken;
 
         public void Take()
