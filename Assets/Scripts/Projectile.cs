@@ -38,7 +38,12 @@ public class Projectile : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallbac
         if (photonView.IsMine)
         {
             if (!other.gameObject.TryGetComponent(out PhotonView pv))
+            {
+                Debug.Log("hit wall");
+                PhotonNetwork.Destroy(gameObject);
                 return;
+            }
+                
 
             if (!pv.IsMine)
             {
