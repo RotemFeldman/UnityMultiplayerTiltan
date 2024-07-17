@@ -13,11 +13,13 @@ public class MultiplayerGameManager : MonoBehaviourPun
     private const string ClientIsReady_RPC = nameof(ClientIsReady);
     private const string SetSpawnPoint_RPC = nameof(SetSpawnPoint);
     private const string GameStarted_RPC = nameof(GameStarted);
+    private const string EndGame_RPC = nameof(EndGame);
 
     private const string GetAvailableCharacters_RPC = nameof(GetAndRefreshAvailableCharacters);
 
     private PlayerController myPlayerController;
-    private int playersReady;
+    private int _playersReady;
+
 
     [Header("Spawn Points")]
     [SerializeField] private SpawnPoint[] spawnPoints;
@@ -110,12 +112,15 @@ public class MultiplayerGameManager : MonoBehaviourPun
             
         info.photonView.RPC(SetSpawnPoint_RPC, info.Sender, randomSpawnPoint.Id);
 
-        playersReady++;
-        if (playersReady >= PhotonNetwork.CurrentRoom.PlayerCount)
+        _playersReady++;
+        if (_playersReady >= PhotonNetwork.CurrentRoom.PlayerCount)
         {
             photonView.RPC(GameStarted_RPC, RpcTarget.All);
         }
     }
+
+    
+    
     
     [PunRPC]
     private void SetSpawnPoint(int spawnPointID)
@@ -134,7 +139,18 @@ public class MultiplayerGameManager : MonoBehaviourPun
     private void GameStarted()
     {
         myPlayerController.enabled = true;
-        Debug.Log("The might master client has the Game Started");
+        myPlayerController.OnLastPlayerRemaining.AddListener(OnEndGame);
+    }
+
+    private void OnEndGame()
+    {
+        photonView.RPC(EndGame_RPC,RpcTarget.All);
+    }
+    
+    [PunRPC]
+    private void EndGame()
+    {
+       myPlayerController.enabled = false;
     }
 
     #endregion

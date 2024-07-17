@@ -167,6 +167,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 100
+  OnLastPlayerRemaining:
+    m_PersistentCalls:
+      m_Calls: []
   inputHandler: {fileID: 5462283601745861098}
   speed: 10
   meshRenderer: {fileID: 980759786234655741}

@@ -2,17 +2,21 @@ using System;
 using System.Collections;
 using UnityEngine;
 using Photon.Pun;
+using UnityEditor.UI;
+using UnityEngine.Events;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 {
-    
-    private const string RecievedamageRPC = "RecieveDamage";
 
-    [SerializeField] private int hp = 100;
+    [SerializeField] public int hp = 100;
 
     [Header("Control")] 
+    private const string PlayerEliminated_RPC = nameof(PlayerEliminated);
+
+    public UnityEvent OnLastPlayerRemaining;
     [SerializeField] private PlayerInputHandler inputHandler;
     [SerializeField] private float speed = 10;
+
     
     [Header("Projectile")]
     private const string ProjectilePrefabName = "Prefabs/Projectile";
@@ -24,7 +28,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     
     
     private Camera _cachedCamera;
-
+    private int _playersEliminated;
     private Vector3 _raycastPos;
     private Vector3 _movementVector;
 
@@ -55,6 +59,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
+            
+            
             _movementVector = inputHandler.movementInput;
             
             //stolen from the course git
@@ -112,15 +118,16 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [PunRPC]
     private void ApplyDamage()
     {
-        Debug.Log("applied damage, life left:" + hp);
         hp -= 10;
+        Debug.Log("applied damage, life left:" + hp);
 
         if (hp <= 0)
         {
-            Debug.Log("died");
-            
-            if(photonView.IsMine)
-                PhotonNetwork.Destroy(gameObject);
+            photonView.RPC(PlayerEliminated_RPC,RpcTarget.All);
+            gameObject.SetActive(false);
+
+            if (photonView.IsMine)
+                StartCoroutine(DestroyDelay(1f, gameObject));
         }
     }
 
@@ -142,6 +149,19 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             }
         }
     }
+    
+    [PunRPC]
+    private void PlayerEliminated()
+    {
+        _playersEliminated++;
+        if (_playersEliminated >= PhotonNetwork.CurrentRoom.PlayerCount)
+        {
+            Debug.Log($"{PhotonNetwork.NickName} is the winner");
+            OnLastPlayerRemaining?.Invoke();
+        }
+    }
+
+    
 
     private IEnumerator DestroyDelay(float delayTime, GameObject gameObjectToDestroy)
     {
