@@ -122,8 +122,10 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
             if (proj.photonView.IsMine)
             {
+                
                 StartCoroutine(DestroyDelay(1f,proj.gameObject));
                 photonView.RPC(ApplyDamage_RPC,RpcTarget.All);
+                other.gameObject.SetActive(false);
             }
         }
     }
@@ -166,6 +168,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
             if (photonView.IsMine)
                 StartCoroutine(DestroyDelay(1f, gameObject));
+            gameObject.SetActive(false);
         }
     }
 
@@ -173,7 +176,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private IEnumerator DestroyDelay(float delayTime, GameObject gameObjectToDestroy)
     {
-        gameObjectToDestroy.SetActive(false);
         yield return new WaitForSeconds(delayTime);
         PhotonNetwork.Destroy(gameObjectToDestroy);
     }
