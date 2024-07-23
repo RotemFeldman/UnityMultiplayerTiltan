@@ -17,7 +17,7 @@ public class MultiplayerGameManager : MonoBehaviourPun
 
     private const string GetAvailableCharacters_RPC = nameof(GetAndRefreshAvailableCharacters);
 
-    private PlayerController myPlayerController;
+    private PlayerController _myPlayerController;
     private int _playersReady;
 
 
@@ -36,7 +36,7 @@ public class MultiplayerGameManager : MonoBehaviourPun
         GetAndRefreshAvailableCharacters(99);
     }
 
-    public void NotifyIsReadyToMasterClient()
+    private void NotifyIsReadyToMasterClient()
     {
         photonView.RPC(ClientIsReady_RPC,RpcTarget.MasterClient);
     }
@@ -69,10 +69,12 @@ public class MultiplayerGameManager : MonoBehaviourPun
         GameObject player = PhotonNetwork.Instantiate(PlayerPrefabName, point.transform.position, point.transform.rotation);
         var meshRend = player.GetComponent<MeshRenderer>();
         meshRend.material.color = _selectableCharacter.charColor.color;
-        myPlayerController = player.GetComponent<PlayerController>();
-        myPlayerController.enabled = false;
+        _myPlayerController = player.GetComponent<PlayerController>();
+        _myPlayerController.enabled = false;
     }
 
+    #region Character Selection
+    
     public void TakeCharacter(SelectableCharacter character)
     {
         
@@ -100,8 +102,10 @@ public class MultiplayerGameManager : MonoBehaviourPun
         
     }
     
+    #endregion
+    
 
-    #region RPC's
+    #region Connection RPC's
 
     [PunRPC]
     private void ClientIsReady(PhotonMessageInfo info)
@@ -138,8 +142,8 @@ public class MultiplayerGameManager : MonoBehaviourPun
     [PunRPC]
     private void GameStarted()
     {
-        myPlayerController.enabled = true;
-        myPlayerController.OnLastPlayerRemaining.AddListener(OnEndGame);
+        _myPlayerController.enabled = true;
+        _myPlayerController.OnLastPlayerRemaining.AddListener(OnEndGame);
     }
 
     private void OnEndGame()
@@ -150,7 +154,7 @@ public class MultiplayerGameManager : MonoBehaviourPun
     [PunRPC]
     private void EndGame()
     {
-       myPlayerController.enabled = false;
+       _myPlayerController.enabled = false;
     }
 
     #endregion

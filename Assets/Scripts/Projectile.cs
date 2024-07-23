@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class Projectile : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
+    [SerializeField] public MeshRenderer meshRenderer;
+
     [SerializeField] private float speed = 20;
     [SerializeField] private float lifeTime = 10;
-
+   
     private float _timeLeft;
 
     private void Awake()
@@ -30,7 +32,10 @@ public class Projectile : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallbac
 
     public void OnPhotonInstantiate(PhotonMessageInfo info)
     {
-        //TODO projectile instantiation data
+        object[] data = (info.photonView.InstantiationData);
+        Color newColor = new Color((float)data[0], (float)data[1], (float)data[2], (float)data[3]);
+        meshRenderer.material.color = newColor;
+        Debug.Log(newColor);
     }
 
     /*private void OnCollisionEnter(Collision other)

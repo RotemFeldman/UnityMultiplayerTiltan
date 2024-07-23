@@ -146,6 +146,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fa666fa0393a4c249bbd7d755df56087, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  meshRenderer: {fileID: 8426755560014499439}
   speed: 20
   lifeTime: 10
 --- !u!114 &5478245263387487806

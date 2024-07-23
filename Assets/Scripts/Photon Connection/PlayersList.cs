@@ -52,7 +52,7 @@ public class PlayersList : MonoBehaviourPunCallbacks
         if(!PhotonNetwork.IsMasterClient)
             return;
         
-        _startGameButton.interactable = (PhotonNetwork.CurrentRoom.PlayerCount >= 1);
+        _startGameButton.interactable = (PhotonNetwork.CurrentRoom.PlayerCount >= 2);
     }
 
     private void Start()

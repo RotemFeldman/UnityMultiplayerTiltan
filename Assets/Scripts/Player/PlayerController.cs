@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     [Header("Visual")] 
     [SerializeField] private MeshRenderer meshRenderer;
+    private Color _playerColor;
     
     
     private Camera _cachedCamera;
@@ -81,14 +82,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         }
         
     }
-
-    private void Shoot()
-    {
-        var tr = transform;
-        GameObject proj =
-            PhotonNetwork.Instantiate(ProjectilePrefabName, tr.position, tr.rotation);
-    }
-
+    
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
     {
         if (stream.IsWriting)
@@ -114,23 +108,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             meshRenderer.material.color = newColor;
         }
     }
-
-    [PunRPC]
-    private void ApplyDamage()
-    {
-        hp -= 10;
-        Debug.Log("applied damage, life left:" + hp);
-
-        if (hp <= 0)
-        {
-            photonView.RPC(PlayerEliminated_RPC,RpcTarget.All);
-            gameObject.SetActive(false);
-
-            if (photonView.IsMine)
-                StartCoroutine(DestroyDelay(1f, gameObject));
-        }
-    }
-
+    
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(ProjectileTag))
@@ -145,10 +124,23 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             {
                 StartCoroutine(DestroyDelay(1f,proj.gameObject));
                 photonView.RPC(ApplyDamage_RPC,RpcTarget.All);
-                proj.gameObject.SetActive(false);
             }
         }
     }
+
+    private void Shoot()
+    {
+        Color c = meshRenderer.material.color;
+        
+        object[] colorData = new object[] {c.r,c.g,c.b,c.a};
+        
+        Debug.Log("player color as object is " + c);
+        
+        var tr = transform;
+        GameObject proj =
+            PhotonNetwork.Instantiate(ProjectilePrefabName, tr.position, tr.rotation,0,colorData);
+    }
+    
     
     [PunRPC]
     private void PlayerEliminated()
@@ -160,11 +152,28 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             OnLastPlayerRemaining?.Invoke();
         }
     }
+    
+    
+    [PunRPC]
+    private void ApplyDamage()
+    {
+        hp -= 10;
+        Debug.Log("applied damage, life left:" + hp);
+
+        if (hp <= 0)
+        {
+            photonView.RPC(PlayerEliminated_RPC,RpcTarget.All);
+
+            if (photonView.IsMine)
+                StartCoroutine(DestroyDelay(1f, gameObject));
+        }
+    }
 
     
 
     private IEnumerator DestroyDelay(float delayTime, GameObject gameObjectToDestroy)
     {
+        gameObjectToDestroy.SetActive(false);
         yield return new WaitForSeconds(delayTime);
         PhotonNetwork.Destroy(gameObjectToDestroy);
     }
