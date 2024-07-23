@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using DefaultNamespace;
+using DefaultNamespace.Player;
 using NUnit.Framework;
 using Photon.Pun;
 using UnityEngine;
+using Color = UnityEngine.Color;
 using Random = UnityEngine.Random;
 
 public class MultiplayerGameManager : MonoBehaviourPun
@@ -18,8 +20,9 @@ public class MultiplayerGameManager : MonoBehaviourPun
     private const string GetAvailableCharacters_RPC = nameof(GetAndRefreshAvailableCharacters);
 
     private PlayerController _myPlayerController;
+    private ChatterController _myChatterController;
     private int _playersReady;
-
+    private Color _playerColor;
 
     [Header("Spawn Points")]
     [SerializeField] private SpawnPoint[] spawnPoints;
@@ -71,6 +74,8 @@ public class MultiplayerGameManager : MonoBehaviourPun
         meshRend.material.color = _selectableCharacter.charColor.color;
         _myPlayerController = player.GetComponent<PlayerController>();
         _myPlayerController.enabled = false;
+        _myChatterController = player.GetComponent<ChatterController>();
+        _myChatterController.PlayerColor = _playerColor;
     }
 
     #region Character Selection
@@ -80,7 +85,7 @@ public class MultiplayerGameManager : MonoBehaviourPun
         
         _selectableCharacter = character.Take();
         characterSelectionScreen.SetActive(false);
-        
+        _playerColor = character.charColor.color;
 
         photonView.RPC(GetAvailableCharacters_RPC,RpcTarget.All,_selectableCharacter.Id);
         NotifyIsReadyToMasterClient();
