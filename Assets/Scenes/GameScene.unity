@@ -563,7 +563,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
+    m_Left: -299
     m_Right: 0
     m_Top: 0
     m_Bottom: 0
@@ -1734,10 +1734,6 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 591435765}
-    - target: {fileID: 6947671122687506010, guid: 61d0a1a87dea4e94fb5e07e082e428e3, type: 3}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: TakeCharacter
-      objectReference: {fileID: 0}
     - target: {fileID: 7442038280488008694, guid: 61d0a1a87dea4e94fb5e07e082e428e3, type: 3}
       propertyPath: m_Name
       value: Selectable Character 0
