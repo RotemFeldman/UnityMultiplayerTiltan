@@ -1,0 +1,54 @@
+{
+    "name": "ChatInputAction",
+    "maps": [
+        {
+            "name": "Chat",
+            "id": "424e9c83-fd70-4e65-b2f8-4a1be7493bf1",
+            "actions": [
+                {
+                    "name": "Open and send chat",
+                    "type": "Button",
+                    "id": "0ccc1d66-12bf-4b48-a7e6-75ff2267c153",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "close chat",
+                    "type": "Button",
+                    "id": "f4893135-4cf5-475b-8754-f0a8d364bb8a",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "376f1255-ea41-46d0-b87d-f7ebb81332ac",
+                    "path": "<Keyboard>/enter",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Open and send chat",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "6158937b-34c5-43ee-878c-164fa36a4c5a",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "close chat",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}

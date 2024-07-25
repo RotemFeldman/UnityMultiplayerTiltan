@@ -2,34 +2,21 @@
 using TMPro;
 using UnityEngine;
 
-namespace DefaultNamespace.Chat
+namespace Chat
 {
-    public class ChatMessage : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
+    public class ChatMessage : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI nameText;
         [SerializeField] private TextMeshProUGUI msgText;
         
-        private string _playerNickname;
-        private string _msg;
-        private Color _color;
-        
-        public void OnPhotonInstantiate(PhotonMessageInfo info)
+        public void InitMessage(string playerName, string msg, params float[] colorValues)
         {
-            object[] data = info.photonView.InstantiationData;
+            nameText.text = $"[{playerName}]: ";
+            msgText.text = msg;
 
-            _playerNickname = (string)data[0];
-            _msg = (string)data[1];
+            Color c = new Color(colorValues[0], colorValues[1], colorValues[2]);
+            nameText.color = c;
 
-            _color = new Color((float)data[2], (float)data[3], (float)data[4]);
-            
-            UpdateVisualElements();
-        }
-
-        void UpdateVisualElements()
-        {
-            nameText.text = $"[{_playerNickname}]: ";
-            msgText.text = _msg;
-            nameText.color = _color;
         }
     }
 }

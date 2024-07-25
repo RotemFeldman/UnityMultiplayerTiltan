@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Chat;
 using DefaultNamespace;
-using DefaultNamespace.Player;
 using NUnit.Framework;
 using Photon.Pun;
 using UnityEngine;
@@ -20,9 +20,7 @@ public class MultiplayerGameManager : MonoBehaviourPun
     private const string GetAvailableCharacters_RPC = nameof(GetAndRefreshAvailableCharacters);
 
     private PlayerController _myPlayerController;
-    private ChatterController _myChatterController;
     private int _playersReady;
-    private Color _playerColor;
 
     [Header("Spawn Points")]
     [SerializeField] private SpawnPoint[] spawnPoints;
@@ -33,6 +31,8 @@ public class MultiplayerGameManager : MonoBehaviourPun
     [SerializeField] private GameObject characterSelectionScreen;
 
     private SelectableCharacter _selectableCharacter;
+
+    [Header("Chat")] [SerializeField] private ChatManager chat;
     
     private void Start()
     {
@@ -72,10 +72,10 @@ public class MultiplayerGameManager : MonoBehaviourPun
         GameObject player = PhotonNetwork.Instantiate(PlayerPrefabName, point.transform.position, point.transform.rotation);
         var meshRend = player.GetComponent<MeshRenderer>();
         meshRend.material.color = _selectableCharacter.charColor.color;
+        chat.playerColor = _selectableCharacter.charColor.color;
         _myPlayerController = player.GetComponent<PlayerController>();
+        chat.playerController = _myPlayerController;
         _myPlayerController.enabled = false;
-        _myChatterController = player.GetComponent<ChatterController>();
-        _myChatterController.PlayerColor = _playerColor;
     }
 
     #region Character Selection
@@ -85,7 +85,6 @@ public class MultiplayerGameManager : MonoBehaviourPun
         
         _selectableCharacter = character.Take();
         characterSelectionScreen.SetActive(false);
-        _playerColor = character.charColor.color;
 
         photonView.RPC(GetAvailableCharacters_RPC,RpcTarget.All,_selectableCharacter.Id);
         NotifyIsReadyToMasterClient();

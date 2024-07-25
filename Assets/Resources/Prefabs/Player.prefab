@@ -15,7 +15,6 @@ GameObject:
   - component: {fileID: 7149934388334067829}
   - component: {fileID: 5462283601745861098}
   - component: {fileID: 7817884223462607579}
-  - component: {fileID: 633690065121638049}
   - component: {fileID: 6010466042055092989}
   - component: {fileID: 5679816539974681771}
   - component: {fileID: 2956036572081984216}
@@ -152,6 +151,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementInput: {x: 0, y: 0, z: 0}
+  onShootInput:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &7817884223462607579
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -171,23 +173,6 @@ MonoBehaviour:
   inputHandler: {fileID: 5462283601745861098}
   speed: 10
   meshRenderer: {fileID: 980759786234655741}
---- !u!114 &633690065121638049
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5450751599268825221}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5b020069e6c74d62a6c7720274a07e97, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  chatWindow: {fileID: 0}
-  inputField: {fileID: 0}
-  inputHandler: {fileID: 5462283601745861098}
-  chatManager: {fileID: 0}
-  PlayerColor: {r: 0, g: 0, b: 0, a: 0}
 --- !u!114 &6010466042055092989
 MonoBehaviour:
   m_ObjectHideFlags: 0

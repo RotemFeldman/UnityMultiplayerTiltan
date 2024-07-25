@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         base.OnEnable();
         if (photonView.IsMine)
         {
-            inputHandler.OnShootInput += Shoot;
+            inputHandler.onShootInput.AddListener(Shoot);
         }
     }
 
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         base.OnDisable();
         if (photonView.IsMine)
         {
-            inputHandler.OnShootInput -= Shoot;
+            inputHandler.onShootInput.RemoveListener(Shoot);
         }
     }
 
