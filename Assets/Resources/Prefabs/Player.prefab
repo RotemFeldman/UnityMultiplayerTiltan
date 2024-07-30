@@ -151,6 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   movementInput: {x: 0, y: 0, z: 0}
+  rotateInput: {x: 0, y: 0, z: 0}
   onShootInput:
     m_PersistentCalls:
       m_Calls: []
@@ -172,6 +173,7 @@ MonoBehaviour:
       m_Calls: []
   inputHandler: {fileID: 5462283601745861098}
   speed: 10
+  lookSpeed: 30
   meshRenderer: {fileID: 980759786234655741}
 --- !u!114 &6010466042055092989
 MonoBehaviour:
@@ -302,6 +304,10 @@ MonoBehaviour:
         m_CallState: 2
     m_ActionId: 93589088-f583-47bd-a0a7-85c6da7b7ada
     m_ActionName: 'Player/Shoot[/Mouse/leftButton]'
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5b6c0fc9-74d9-45d8-bb39-f48fa5cec95c
+    m_ActionName: Player/Rotate
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Player

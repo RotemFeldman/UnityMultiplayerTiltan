@@ -5,6 +5,7 @@ using Chat;
 using DefaultNamespace;
 using NUnit.Framework;
 using Photon.Pun;
+using Unity.Cinemachine;
 using UnityEngine;
 using Color = UnityEngine.Color;
 using Random = UnityEngine.Random;
@@ -33,6 +34,8 @@ public class MultiplayerGameManager : MonoBehaviourPun
     private SelectableCharacter _selectableCharacter;
 
     [Header("Chat")] [SerializeField] private ChatManager chat;
+
+    [Header("Camera")] [SerializeField] private CinemachineCamera cinemachineCam;
     
     private void Start()
     {
@@ -71,8 +74,18 @@ public class MultiplayerGameManager : MonoBehaviourPun
         point.Take();
         GameObject player = PhotonNetwork.Instantiate(PlayerPrefabName, point.transform.position, point.transform.rotation);
         var meshRend = player.GetComponent<MeshRenderer>();
+
+        //set camera follow target
+        if (player.GetPhotonView().IsMine)
+        {
+            cinemachineCam.Follow = player.transform;
+            Debug.Log("follow " + PhotonNetwork.NickName);
+        }
+
+        //set color to selected
         meshRend.material.color = _selectableCharacter.charColor.color;
         chat.playerColor = _selectableCharacter.charColor.color;
+        
         _myPlayerController = player.GetComponent<PlayerController>();
         chat.playerController = _myPlayerController;
         _myPlayerController.enabled = false;

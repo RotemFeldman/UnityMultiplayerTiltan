@@ -4,6 +4,7 @@ using UnityEngine;
 using Photon.Pun;
 using UnityEditor.UI;
 using UnityEngine.Events;
+using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 {
@@ -16,6 +17,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     public UnityEvent OnLastPlayerRemaining;
     [SerializeField] private PlayerInputHandler inputHandler;
     [SerializeField] private float speed = 10;
+    [SerializeField] private float lookSpeed = 10;
 
     
     [Header("Projectile")]
@@ -32,6 +34,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private int _playersEliminated;
     private Vector3 _raycastPos;
     private Vector3 _movementVector;
+    private Vector3 _rotateVector;
 
     public override void OnEnable()
     {
@@ -63,9 +66,12 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             
             
             _movementVector = inputHandler.movementInput;
+            transform.Translate(_movementVector * (Time.deltaTime * speed));
+            _rotateVector.y = Mouse.current.delta.ReadValue().x;
+            transform.Rotate(_rotateVector * (Time.deltaTime * lookSpeed));
             
-            //stolen from the course git
-            Ray ray = _cachedCamera.ScreenPointToRay(Input.mousePosition);
+            //stolen from the course git - topdown control
+            /*Ray ray = _cachedCamera.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out var hit))
             {
                 _raycastPos = hit.point;
@@ -78,7 +84,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             eulerRotation.z = 0;
             
             transform.eulerAngles = eulerRotation;
-            transform.Translate(_movementVector * (Time.deltaTime * speed),Space.World);
+            transform.Translate(_movementVector * (Time.deltaTime * speed),Space.World);*/
         }
         
     }

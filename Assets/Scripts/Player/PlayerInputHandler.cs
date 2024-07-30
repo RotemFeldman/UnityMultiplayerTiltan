@@ -6,18 +6,19 @@ using UnityEngine.InputSystem;
 public class PlayerInputHandler : MonoBehaviour
 {
     [HideInInspector] public Vector3 movementInput;
+    [HideInInspector] public Vector3 rotateInput;
     
     [HideInInspector] public UnityEvent onShootInput;
 
     
 
-    private Vector2 _workspace;
+    private Vector2 _workspaceMove;
     public void OnMove(InputAction.CallbackContext context)
     {
         
-        _workspace = context.ReadValue<Vector2>();
-        movementInput.x = _workspace.x;
-        movementInput.z = _workspace.y;
+        _workspaceMove = context.ReadValue<Vector2>();
+        movementInput.x = _workspaceMove.x;
+        movementInput.z = _workspaceMove.y;
     }
 
     public void OnShoot(InputAction.CallbackContext context)
@@ -28,6 +29,7 @@ public class PlayerInputHandler : MonoBehaviour
         }
             
     }
+    
 
    
 }
