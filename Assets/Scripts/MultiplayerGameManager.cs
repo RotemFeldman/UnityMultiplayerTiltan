@@ -73,6 +73,8 @@ public class MultiplayerGameManager : MonoBehaviourPun
     {
         point.Take();
         GameObject player = PhotonNetwork.Instantiate(PlayerPrefabName, point.transform.position, point.transform.rotation);
+        player.transform.LookAt(Vector3.zero);
+        
         var meshRend = player.GetComponent<MeshRenderer>();
 
         //set camera follow target
@@ -86,6 +88,7 @@ public class MultiplayerGameManager : MonoBehaviourPun
         meshRend.material.color = _selectableCharacter.charColor.color;
         chat.playerColor = _selectableCharacter.charColor.color;
         
+        //set local playerController and disable until game starts
         _myPlayerController = player.GetComponent<PlayerController>();
         chat.playerController = _myPlayerController;
         _myPlayerController.enabled = false;
