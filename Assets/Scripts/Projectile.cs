@@ -5,6 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
     [SerializeField] public MeshRenderer meshRenderer;
+    [SerializeField] public Collider collider;
 
     [SerializeField] private float speed = 20;
     [SerializeField] private float lifeTime = 10;
@@ -29,6 +30,12 @@ public class Projectile : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallbac
         object[] data = (info.photonView.InstantiationData);
         Color newColor = new Color((float)data[0], (float)data[1], (float)data[2], (float)data[3]);
         meshRenderer.material.color = newColor;
+    }
+
+    public void DisableProjectile()
+    {
+        meshRenderer.enabled = false;
+        collider.enabled = false;
     }
     
 }

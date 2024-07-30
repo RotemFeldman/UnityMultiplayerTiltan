@@ -122,7 +122,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         {
             var proj = other.GetComponent<Projectile>();
             
-            //TODO ask lior about this line, how is it different from isMine?
             if(proj.photonView.Owner.ActorNumber == photonView.Owner.ActorNumber)
                 return;
 
@@ -133,7 +132,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
                 photonView.RPC(ApplyDamage_RPC,RpcTarget.All);
                 
             }
-            other.gameObject.SetActive(false);
+
+            proj.DisableProjectile();
         }
     }
 
@@ -167,7 +167,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     private void ApplyDamage()
     {
         hp -= 10;
-        Debug.Log("applied damage, life left:" + hp);
 
         if (hp <= 0)
         {
