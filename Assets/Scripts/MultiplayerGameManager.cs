@@ -13,8 +13,10 @@ using Random = UnityEngine.Random;
 public class MultiplayerGameManager : MonoBehaviourPun
 {
     private const string PlayerPrefabName = "Prefabs/Player";
+    private const string BoostPrefabName = "Prefabs/Boost";
     private const string ClientIsReady_RPC = nameof(ClientIsReady);
     private const string SetSpawnPoint_RPC = nameof(SetSpawnPoint);
+    private const string SetBoostSpawner_RPC = nameof(SetBoostSpawner);
     private const string GameStarted_RPC = nameof(GameStarted);
     private const string EndGame_RPC = nameof(EndGame);
 
@@ -25,6 +27,9 @@ public class MultiplayerGameManager : MonoBehaviourPun
 
     [Header("Spawn Points")]
     [SerializeField] private SpawnPoint[] spawnPoints;
+
+    [Header("Boost Spawners")]
+    [SerializeField] private BoostSpawner[] boostSpawners;
 
     [Header("Characters")]
     [SerializeField] private SelectableCharacter[] characters;
@@ -68,6 +73,35 @@ public class MultiplayerGameManager : MonoBehaviourPun
         int rnd = Random.Range(0, availablePoints.Count);
         return availablePoints[rnd];
     }
+
+    private BoostSpawner GetRandomBoostSpawner()
+    {
+        List<BoostSpawner> avalibleBoostSpawners = new();
+
+        foreach (var spawner in boostSpawners)
+        {
+            if (!spawner.IsTaken)
+            {
+                avalibleBoostSpawners.Add(spawner);
+            }
+        }
+
+        if (avalibleBoostSpawners.Count == 0)
+        {
+            Debug.Log("all spawners taken");
+            return null;
+        }
+
+        int randomBoostSpawnerIndex = Random.Range(0, avalibleBoostSpawners.Count);
+        return avalibleBoostSpawners[randomBoostSpawnerIndex];
+    }
+
+    private void SpawnBooster(BoostSpawner boost)
+    {
+        boost.Take();
+        GameObject item = PhotonNetwork.Instantiate(BoostPrefabName, boost.transform.position, boost.transform.rotation);
+    }
+
 
     private void SpawnPlayer(SpawnPoint point)
     {
@@ -144,8 +178,6 @@ public class MultiplayerGameManager : MonoBehaviourPun
     }
 
     
-    
-    
     [PunRPC]
     private void SetSpawnPoint(int spawnPointID)
     {
@@ -158,7 +190,20 @@ public class MultiplayerGameManager : MonoBehaviourPun
             }
         }
     }
-    
+
+    [PunRPC]
+    private void SetBoostSpawner(int boostSpawnID)
+    {
+        foreach (var boostSpawn in boostSpawners)
+        {
+            if (boostSpawn.Id == boostSpawnID)
+            {
+                SpawnBooster(boostSpawn);
+                break;
+            }
+        }
+    }
+
     [PunRPC]
     private void GameStarted()
     {
