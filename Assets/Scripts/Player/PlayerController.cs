@@ -28,8 +28,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [Header("Visual")] 
     [SerializeField] private MeshRenderer meshRenderer;
     private Color _playerColor;
-    
-    
+
+    [Header("Boost")]
+    private const string BoostTag = "Boost";
+
+
     private Camera _cachedCamera;
     private int _playersEliminated;
     private Vector3 _raycastPos;
@@ -134,6 +137,11 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             }
 
             proj.DisableProjectile();
+        }
+        else if (other.CompareTag(BoostTag))
+        {
+            var boost = other.GetComponent<Boost>();
+            boost.Collect();
         }
     }
 

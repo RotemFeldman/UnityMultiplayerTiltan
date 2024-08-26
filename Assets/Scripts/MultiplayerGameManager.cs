@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using Chat;
@@ -13,7 +14,7 @@ using Random = UnityEngine.Random;
 public class MultiplayerGameManager : MonoBehaviourPun
 {
     private const string PlayerPrefabName = "Prefabs/Player";
-    private const string BoostPrefabName = "Prefabs/Boost";
+    private const string BoostPrefabName = "Prefabs/RoomObject";
     private const string ClientIsReady_RPC = nameof(ClientIsReady);
     private const string SetSpawnPoint_RPC = nameof(SetSpawnPoint);
     private const string SetBoostSpawner_RPC = nameof(SetBoostSpawner);
@@ -45,6 +46,8 @@ public class MultiplayerGameManager : MonoBehaviourPun
     private void Start()
     {
         GetAndRefreshAvailableCharacters(99);
+        if(PhotonNetwork.IsMasterClient)
+            StartCoroutine("WaitTenSecondsAndSpawn");
     }
 
     private void NotifyIsReadyToMasterClient()
@@ -98,10 +101,13 @@ public class MultiplayerGameManager : MonoBehaviourPun
 
     private void SpawnBooster(BoostSpawner boost)
     {
-        boost.Take();
-        GameObject item = PhotonNetwork.Instantiate(BoostPrefabName, boost.transform.position, boost.transform.rotation);
+        if (boost != null)
+        {
+            boost.Take();
+            GameObject item = PhotonNetwork.Instantiate(BoostPrefabName, boost.transform.position, boost.transform.rotation); 
+            item.GetComponent<Boost>().spawner = boost;
+        }
     }
-
 
     private void SpawnPlayer(SpawnPoint point)
     {
@@ -126,6 +132,15 @@ public class MultiplayerGameManager : MonoBehaviourPun
         _myPlayerController = player.GetComponent<PlayerController>();
         chat.playerController = _myPlayerController;
         _myPlayerController.enabled = false;
+    }
+
+    private IEnumerator WaitTenSecondsAndSpawn()
+    {
+        for(;;)
+        {
+            SpawnBooster(GetRandomBoostSpawner());
+            yield return new WaitForSeconds(10f);
+        }
     }
 
     #region Character Selection
