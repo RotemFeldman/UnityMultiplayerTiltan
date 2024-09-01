@@ -1,24 +1,21 @@
 ﻿using System;
 using UnityEngine;
 
-namespace DefaultNamespace
+public class SpawnPoint : MonoBehaviour
 {
-    public class SpawnPoint : MonoBehaviour
-    {
-        public int Id = 0;
+    public int Id = 0;
         
-        private bool _isTaken = false;
-        public bool IsTaken => _isTaken;
+    private bool _isTaken = false;
+    public bool IsTaken => _isTaken;
 
-        public void Take()
-        {
-            _isTaken = true;
-        }
+    public void Take()
+    {
+        _isTaken = true;
+    }
 
-        private void OnDrawGizmos()
-        {
-            Gizmos.color = Color.green;
-            Gizmos.DrawSphere(transform.position,1f);
-        }
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere(transform.position,1f); 
     }
 }

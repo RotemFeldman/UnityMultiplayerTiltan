@@ -1,4 +1,3 @@
-using DefaultNamespace;
 using Photon.Pun;
 using UnityEngine;
 

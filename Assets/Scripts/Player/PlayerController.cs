@@ -68,8 +68,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             transform.Rotate(_rotateVector * (Time.deltaTime * lookSpeed));
             
             //stolen from the course git - topdown control
-            /*Ray ray = _cachedCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out var hit))
+            /*Ray rayMouse = _cachedCamera.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(rayMouse, out var hit))
             {
                 _raycastPos = hit.point;
             }

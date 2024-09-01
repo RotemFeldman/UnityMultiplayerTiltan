@@ -77,7 +77,7 @@ namespace Chat
         }
 
         [PunRPC]
-        private void NewChatMessage(string chatterName, string msg, float colorR,float colorG,float colorB)
+        public void NewChatMessage(string chatterName, string msg, float colorR,float colorG,float colorB)
         {
             Debug.Log(chatterName+ ": " + msg);
             var go = Instantiate(chatMessagePrefab, Vector3.zero, Quaternion.identity,messageHolder);

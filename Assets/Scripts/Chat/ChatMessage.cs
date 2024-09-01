@@ -1,5 +1,4 @@
-﻿using Photon.Pun;
-using TMPro;
+﻿using TMPro;
 using UnityEngine;
 
 namespace Chat

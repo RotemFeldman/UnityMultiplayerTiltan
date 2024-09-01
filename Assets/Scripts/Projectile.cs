@@ -5,7 +5,7 @@ using UnityEngine;
 public class Projectile : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallback
 {
     [SerializeField] public MeshRenderer meshRenderer;
-    [SerializeField] public Collider collider;
+    [SerializeField] public Collider colliders;
 
     [SerializeField] private float speed = 20;
     [SerializeField] private float lifeTime = 10;
@@ -34,6 +34,6 @@ public class Projectile : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallbac
     public void DisableProjectile()
     {
         meshRenderer.enabled = false;
-        collider.enabled = false;
+        colliders.enabled = false;
     }
 }

@@ -6,12 +6,13 @@ using Chat;
 using DefaultNamespace;
 using NUnit.Framework;
 using Photon.Pun;
-using Unity.Cinemachine;
+using Photon.Realtime;
 using UnityEngine;
+using Unity.Cinemachine;
 using Color = UnityEngine.Color;
 using Random = UnityEngine.Random;
 
-public class MultiplayerGameManager : MonoBehaviourPun
+public class MultiplayerGameManager : MonoBehaviourPunCallbacks
 {
     private const string PlayerPrefabName = "Prefabs/Player";
     private const string BoostPrefabName = "Prefabs/RoomObject";
@@ -21,7 +22,7 @@ public class MultiplayerGameManager : MonoBehaviourPun
     private const string GameStarted_RPC = nameof(GameStarted);
     private const string EndGame_RPC = nameof(EndGame);
     private const string GetAvailableCharacters_RPC = nameof(GetAndRefreshAvailableCharacters);
-
+    private const string SetNextSpawnPoint_RPC = nameof(SetNextSpawnPoint);
     private PlayerController _myPlayerController;
     private int _playersReady;
 
@@ -37,6 +38,7 @@ public class MultiplayerGameManager : MonoBehaviourPun
     [SerializeField] private GameObject characterSelectionScreen;
 
     private SelectableCharacter _selectableCharacter;
+    private SpawnPoint _nextSpawnPoint;
 
     [Header("Chat")] [SerializeField] private ChatManager chat;
 
@@ -45,8 +47,11 @@ public class MultiplayerGameManager : MonoBehaviourPun
     private void Start()
     {
         GetAndRefreshAvailableCharacters(99);
-        if(PhotonNetwork.IsMasterClient)
-            StartCoroutine("WaitTenSecondsAndSpawn");
+        if (PhotonNetwork.IsMasterClient)
+        {
+            SetNextSpawnPoint();
+            StartCoroutine(nameof(WaitTenSecondsAndSpawn));
+        }
     }
 
     private void NotifyIsReadyToMasterClient()
@@ -75,27 +80,36 @@ public class MultiplayerGameManager : MonoBehaviourPun
         int rnd = Random.Range(0, availablePoints.Count);
         return availablePoints[rnd];
     }
+    
+    private void SetNextSpawnPoint()
+    {
+        _nextSpawnPoint = GetRandomSpawnPoint();
+        if (_nextSpawnPoint != null)
+        {
+            photonView.RPC(SetNextSpawnPoint_RPC, RpcTarget.All, _nextSpawnPoint.Id);
+        }
+    }
 
     private BoostSpawner GetRandomBoostSpawner()
     {
-        List<BoostSpawner> avalibleBoostSpawners = new();
+        List<BoostSpawner> availableBoostSpawners = new();
 
         foreach (var spawner in boostSpawners)
         {
             if (!spawner.IsTaken)
             {
-                avalibleBoostSpawners.Add(spawner);
+                availableBoostSpawners.Add(spawner);
             }
         }
 
-        if (avalibleBoostSpawners.Count == 0)
+        if (availableBoostSpawners.Count == 0)
         {
             Debug.Log("all spawners taken");
             return null;
         }
         
-        int randomBoostSpawnerIndex = Random.Range(0, avalibleBoostSpawners.Count);
-        return avalibleBoostSpawners[randomBoostSpawnerIndex];
+        int randomBoostSpawnerIndex = Random.Range(0, availableBoostSpawners.Count);
+        return availableBoostSpawners[randomBoostSpawnerIndex];
     }
 
     private void SpawnBooster(BoostSpawner boost)
@@ -133,11 +147,14 @@ public class MultiplayerGameManager : MonoBehaviourPun
         _myPlayerController.enabled = false;
     }
 
-    private IEnumerator WaitTenSecondsAndSpawn()
+    private IEnumerator WaitTenSecondsAndSpawn(int maxSpawns)
     {
-        for(;;)
+        int spawnCount = 0;
+        while (spawnCount < maxSpawns)
         {
             SpawnBooster(GetRandomBoostSpawner());
+            SetNextSpawnPoint();
+            spawnCount++;
             yield return new WaitForSeconds(10f);
         }
     }
@@ -200,6 +217,12 @@ public class MultiplayerGameManager : MonoBehaviourPun
             }
         }
     }
+    
+    [PunRPC]
+    private void SetNextSpawnPoint(int spawnPointID)
+    {
+        _nextSpawnPoint = spawnPoints.FirstOrDefault(point => point.Id == spawnPointID);
+    }
 
     [PunRPC]
     private void SetBoostSpawner(int boostSpawnID)
@@ -230,6 +253,46 @@ public class MultiplayerGameManager : MonoBehaviourPun
     private void EndGame()
     {
        _myPlayerController.enabled = false;
+    }
+
+    #endregion
+    
+    #region MasterClient Handling
+
+    public override void OnMasterClientSwitched(Player newMasterClient)
+    {
+        base.OnMasterClientSwitched(newMasterClient);
+        if (PhotonNetwork.IsMasterClient)
+        {
+            SetNextSpawnPoint();
+            StartCoroutine(nameof(WaitTenSecondsAndSpawn));
+        }
+        
+        chat.NewChatMessage("System", $"New MasterClient: {newMasterClient.NickName}", 1f, 1f, 0f);
+    }
+    
+    public void AssignNewManager(Player newManager)
+    {
+        if (PhotonNetwork.IsMasterClient)
+        {
+            PhotonNetwork.SetMasterClient(newManager);
+        }
+    }
+
+    #endregion
+
+    #region Player Join/Leave Callbacks
+
+    public override void OnPlayerEnteredRoom(Player newPlayer)
+    {
+        base.OnPlayerEnteredRoom(newPlayer);
+        chat.NewChatMessage("System", $"{newPlayer.NickName} has joined the room", 1f, 1f, 0f);
+    }
+
+    public override void OnPlayerLeftRoom(Player otherPlayer)
+    {
+        base.OnPlayerLeftRoom(otherPlayer);
+        chat.NewChatMessage("System", $"{otherPlayer.NickName} has left the room", 1f, 1f, 0f);
     }
 
     #endregion
