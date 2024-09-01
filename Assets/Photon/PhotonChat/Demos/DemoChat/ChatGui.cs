@@ -11,6 +11,7 @@ using UnityEngine;
 using UnityEngine.UI;
 
 using Photon.Chat;
+using Photon.PhotonChat.Demos.DemoChat;
 using Photon.Realtime;
 using AuthenticationValues = Photon.Chat.AuthenticationValues;
 #if PHOTON_UNITY_NETWORKING

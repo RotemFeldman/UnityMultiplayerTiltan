@@ -9,13 +9,10 @@ public class PlayerInputHandler : MonoBehaviour
     [HideInInspector] public Vector3 rotateInput;
     
     [HideInInspector] public UnityEvent onShootInput;
-
     
-
     private Vector2 _workspaceMove;
     public void OnMove(InputAction.CallbackContext context)
     {
-        
         _workspaceMove = context.ReadValue<Vector2>();
         movementInput.x = _workspaceMove.x;
         movementInput.z = _workspaceMove.y;
@@ -27,9 +24,5 @@ public class PlayerInputHandler : MonoBehaviour
         {
             onShootInput?.Invoke();
         }
-            
     }
-    
-
-   
 }

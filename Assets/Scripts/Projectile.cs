@@ -10,7 +10,6 @@ public class Projectile : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallbac
     [SerializeField] private float speed = 20;
     [SerializeField] private float lifeTime = 10;
     
-
     private void Update()
     {
         if (photonView.IsMine)
@@ -37,5 +36,4 @@ public class Projectile : MonoBehaviourPunCallbacks, IPunInstantiateMagicCallbac
         meshRenderer.enabled = false;
         collider.enabled = false;
     }
-    
 }

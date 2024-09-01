@@ -2,13 +2,11 @@ using System;
 using System.Collections;
 using UnityEngine;
 using Photon.Pun;
-using UnityEditor.UI;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 {
-
     [SerializeField] public int hp = 100;
 
     [Header("Control")] 
@@ -18,7 +16,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     [SerializeField] private PlayerInputHandler inputHandler;
     [SerializeField] private float speed = 10;
     [SerializeField] private float lookSpeed = 10;
-
     
     [Header("Projectile")]
     private const string ProjectilePrefabName = "Prefabs/Projectile";
@@ -31,8 +28,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     [Header("Boost")]
     private const string BoostTag = "Boost";
-
-
+    
     private Camera _cachedCamera;
     private int _playersEliminated;
     private Vector3 _raycastPos;
@@ -66,8 +62,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     {
         if (photonView.IsMine)
         {
-            
-            
             _movementVector = inputHandler.movementInput;
             transform.Translate(_movementVector * (Time.deltaTime * speed));
             _rotateVector.y = Mouse.current.delta.ReadValue().x;
@@ -89,7 +83,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             transform.eulerAngles = eulerRotation;
             transform.Translate(_movementVector * (Time.deltaTime * speed),Space.World);*/
         }
-        
     }
     
     public void OnPhotonSerializeView(PhotonStream stream, PhotonMessageInfo info)
@@ -118,7 +111,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
     
-    
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag(ProjectileTag))
@@ -130,12 +122,9 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
             if (proj.photonView.IsMine)
             {
-                
                 StartCoroutine(DestroyDelay(1f,proj.gameObject));
                 photonView.RPC(ApplyDamage_RPC,RpcTarget.All);
-                
             }
-
             proj.DisableProjectile();
         }
         else if (other.CompareTag(BoostTag))
@@ -154,10 +143,8 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         Debug.Log("player color as object is " + c);
         
         var tr = transform;
-        GameObject proj =
-            PhotonNetwork.Instantiate(ProjectilePrefabName, tr.position, tr.rotation,0,colorData);
+        GameObject proj = PhotonNetwork.Instantiate(ProjectilePrefabName, tr.position, tr.rotation,0,colorData);
     }
-    
     
     [PunRPC]
     private void PlayerEliminated()
@@ -169,7 +156,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             OnLastPlayerRemaining?.Invoke();
         }
     }
-    
     
     [PunRPC]
     private void ApplyDamage()
@@ -186,7 +172,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
     
-
     private IEnumerator DestroyDelay(float delayTime, GameObject gameObjectToDestroy)
     {
         yield return new WaitForSeconds(delayTime);

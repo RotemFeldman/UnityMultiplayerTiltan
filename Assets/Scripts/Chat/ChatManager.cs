@@ -39,7 +39,6 @@ namespace Chat
 
         private void EscapePressed()
         {
-
             if (chatWindow.activeSelf)
             {
                 Debug.Log("closed chat");

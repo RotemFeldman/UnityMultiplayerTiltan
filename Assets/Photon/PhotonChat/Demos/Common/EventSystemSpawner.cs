@@ -11,7 +11,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-namespace Photon.Chat.UtilityScripts
+namespace Photon.PhotonChat.Demos.Common
 {
     /// <summary>
     /// Event system spawner. Will add an EventSystem GameObject with an EventSystem component and a StandaloneInputModule component.
@@ -27,7 +27,7 @@ namespace Photon.Chat.UtilityScripts
             return;
             #endif
 
-            EventSystem sceneEventSystem = FindObjectOfType<EventSystem>();
+            EventSystem sceneEventSystem = FindFirstObjectByType<EventSystem>();
             if (sceneEventSystem == null)
             {
                 GameObject eventSystem = new GameObject("EventSystem");

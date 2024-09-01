@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Photon_Connection;
+using UnityEngine;
 using UnityEngine.UI;
 using Photon.Realtime;
 using TMPro;
@@ -21,15 +22,11 @@ namespace DefaultNamespace
         {
             _name.text = Info.Name;
             _players.text = Info.PlayerCount.ToString() + "/" + Info.MaxPlayers.ToString();
-            
         }
-
-
+        
         public void JoinRoom()
         {
             MainMenuConnectionManager.JoinRoom(Info.Name);
         }
     }
-    
-    
 }

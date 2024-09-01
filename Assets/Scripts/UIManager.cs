@@ -6,7 +6,6 @@ using UnityEngine.UI;
 
 public class UIManager : MonoBehaviourPunCallbacks
 {
-
     public static UIManager Instance;
     
     // connect server
@@ -32,7 +31,6 @@ public class UIManager : MonoBehaviourPunCallbacks
     [Space(10)]
     [SerializeField] private TextMeshProUGUI _debugPhotonText;
     
-
     public enum UIScreen
     {
         Connect,
@@ -56,9 +54,7 @@ public class UIManager : MonoBehaviourPunCallbacks
 
     private void Start()
     {
-       
         SwitchUIScreen(UIScreen.Connect);
-        
     }
     
     private void Update()
@@ -87,9 +83,6 @@ public class UIManager : MonoBehaviourPunCallbacks
             case UIScreen.JoinRoom:
                 _joinRoomScreen.SetActive(true);
                 break;
-            
         }
     }
-
-    
 }

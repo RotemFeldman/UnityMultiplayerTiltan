@@ -9,16 +9,13 @@ using UnityEngine.UI;
 
 public class PlayersList : MonoBehaviourPunCallbacks
 {
-    
     [SerializeField] private TextMeshProUGUI _playersList;
     [SerializeField] private Button _startGameButton;
-
 
     public override void OnPlayerEnteredRoom(Player newPlayer)
     {
         base.OnPlayerEnteredRoom(newPlayer);
         UpdatePlayersList();
-
     }
 
     public override void OnPlayerLeftRoom(Player otherPlayer)

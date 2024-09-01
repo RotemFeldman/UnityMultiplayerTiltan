@@ -16,7 +16,6 @@ namespace Chat
 
             Color c = new Color(colorValues[0], colorValues[1], colorValues[2]);
             nameText.color = c;
-
         }
     }
 }

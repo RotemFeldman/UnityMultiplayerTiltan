@@ -14,11 +14,9 @@ public class Boost : MonoBehaviour
             PhotonNetwork.Destroy(gameObject);
         }
     }*/
-
     public void Collect()
     {
         spawner.FreeSpawn();
         PhotonNetwork.Destroy(gameObject);
     }
 }
-

@@ -5,12 +5,12 @@
 // --------------------------------------------------------------------------------------------------------------------
 
 
+using Photon.Chat.Demo;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-
-namespace Photon.Chat.Demo
+namespace Photon.PhotonChat.Demos.DemoChat
 {
     public class ChannelSelector : MonoBehaviour, IPointerClickHandler
     {
@@ -25,7 +25,7 @@ namespace Photon.Chat.Demo
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            ChatGui handler = FindObjectOfType<ChatGui>();
+            ChatGui handler = FindFirstObjectByType<ChatGui>();
             handler.ShowChannel(this.Channel);
         }
     }

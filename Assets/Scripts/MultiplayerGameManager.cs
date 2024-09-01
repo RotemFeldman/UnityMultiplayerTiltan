@@ -20,7 +20,6 @@ public class MultiplayerGameManager : MonoBehaviourPun
     private const string SetBoostSpawner_RPC = nameof(SetBoostSpawner);
     private const string GameStarted_RPC = nameof(GameStarted);
     private const string EndGame_RPC = nameof(EndGame);
-
     private const string GetAvailableCharacters_RPC = nameof(GetAndRefreshAvailableCharacters);
 
     private PlayerController _myPlayerController;
@@ -94,7 +93,7 @@ public class MultiplayerGameManager : MonoBehaviourPun
             Debug.Log("all spawners taken");
             return null;
         }
-
+        
         int randomBoostSpawnerIndex = Random.Range(0, avalibleBoostSpawners.Count);
         return avalibleBoostSpawners[randomBoostSpawnerIndex];
     }
@@ -147,7 +146,6 @@ public class MultiplayerGameManager : MonoBehaviourPun
     
     public void TakeCharacter(SelectableCharacter character)
     {
-        
         _selectableCharacter = character.Take();
         characterSelectionScreen.SetActive(false);
 
@@ -168,12 +166,10 @@ public class MultiplayerGameManager : MonoBehaviourPun
             if(c.IsTaken)
                 c.gameObject.SetActive(false);
         }
-        
     }
     
     #endregion
     
-
     #region Connection RPC's
 
     [PunRPC]
@@ -191,7 +187,6 @@ public class MultiplayerGameManager : MonoBehaviourPun
             photonView.RPC(GameStarted_RPC, RpcTarget.All);
         }
     }
-
     
     [PunRPC]
     private void SetSpawnPoint(int spawnPointID)
