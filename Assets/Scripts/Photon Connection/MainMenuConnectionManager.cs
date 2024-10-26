@@ -24,7 +24,10 @@ namespace Photon_Connection
 
         public void CreateRoom()
         {
-            RoomOptions ro = new RoomOptions();
+            RoomOptions ro = new RoomOptions()
+            {
+                PlayerTtl = 30000
+            };
             if (int.TryParse(_uiManager.RoomMaxPlayersInputField.text, out int result) && result > 0)
             {
                 ro.MaxPlayers = result;

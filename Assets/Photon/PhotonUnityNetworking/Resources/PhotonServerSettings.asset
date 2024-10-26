@@ -49,6 +49,8 @@ MonoBehaviour:
   - NewChatMessage
   - SetBoostSpawner
   - SetNextSpawnPoint
+  - NetworkDestroy
+  - RegisterPlayerPhotonView
   DisableAutoOpenWizard: 1
   ShowSettings: 0
   DevRegionSetOnce: 1
