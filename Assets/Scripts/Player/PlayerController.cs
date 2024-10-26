@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     public override void OnEnable()
     {
         base.OnEnable();
-        if (photonView.IsMine)
+        if (photonView.AmOwner)
         {
             inputHandler.onShootInput.AddListener(Shoot);
         }
@@ -47,7 +47,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
     public override void OnDisable()
     {
         base.OnDisable();
-        if (photonView.IsMine)
+        if (photonView.AmOwner)
         {
             inputHandler.onShootInput.RemoveListener(Shoot);
         }
@@ -60,7 +60,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
 
     private void Update()
     {
-        if (photonView.IsMine)
+        if (photonView.AmOwner)
         {
             _movementVector = inputHandler.movementInput;
             transform.Translate(_movementVector * (Time.deltaTime * speed));
@@ -120,7 +120,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
             if(proj.photonView.Owner.ActorNumber == photonView.Owner.ActorNumber)
                 return;
 
-            if (proj.photonView.IsMine)
+            if (proj.photonView.AmOwner)
             {
                 StartCoroutine(DestroyDelay(1f,proj.gameObject));
                 photonView.RPC(ApplyDamage_RPC,RpcTarget.All);
