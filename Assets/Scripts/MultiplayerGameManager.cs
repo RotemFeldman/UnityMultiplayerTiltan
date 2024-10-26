@@ -269,10 +269,20 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
             SetNextSpawnPoint();
             StartCoroutine(nameof(WaitTenSecondsAndSpawn));
         }
-        
-        chat.NewChatMessage("System", $"New MasterClient: {newMasterClient.NickName}", 1f, 1f, 0f);
+
+        base.OnMasterClientSwitched(newMasterClient);
+        Debug.Log($"The new master client is {newMasterClient}");
     }
-    
+
+    [ContextMenu("Switch Master Client")]
+    public void ChangeMasterClient()
+    {
+        Player MasterClientCandidate = PhotonNetwork.LocalPlayer.GetNext();
+
+        bool success = PhotonNetwork.SetMasterClient(MasterClientCandidate);
+        Debug.Log($"New Master Setting secces is {success}");
+    }
+
     public void AssignNewManager(Player newManager)
     {
         if (PhotonNetwork.IsMasterClient)
@@ -293,8 +303,22 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
 
     public override void OnPlayerLeftRoom(Player otherPlayer)
     {
+        if (!PhotonNetwork.IsMasterClient)
+            return;
         base.OnPlayerLeftRoom(otherPlayer);
-        chat.NewChatMessage("System", $"{otherPlayer.NickName} has left the room", 1f, 1f, 0f);
+        Debug.Log($"player has been disconnected. Player Active/Inactive {otherPlayer.IsInactive}");
+
+        if (otherPlayer.IsMasterClient)
+        {
+            Debug.Log("player was the master client, changing master...");
+            ChangeMasterClient();
+        }
+    }
+
+    [ContextMenu("Disconnect")]
+    public void Disconnect()
+    {
+        PhotonNetwork.LeaveRoom();
     }
 
     #endregion
