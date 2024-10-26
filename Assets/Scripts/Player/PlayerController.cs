@@ -53,14 +53,6 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.CompareTag("Boost"))
-        {
-            other.gameObject.GetComponent<Boost>().Collect();
-        }
-    }
-
     private void Start()
     {
         _cachedCamera = Camera.main;
@@ -137,8 +129,7 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         }
         else if (other.CompareTag(BoostTag))
         {
-            var boost = other.GetComponent<Boost>();
-            boost.Collect();
+            other.gameObject.GetComponent<Boost>().Collect();
         }
     }
 
