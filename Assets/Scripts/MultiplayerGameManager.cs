@@ -267,7 +267,7 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             SetNextSpawnPoint();
-            StartCoroutine(nameof(WaitTenSecondsAndSpawn));
+            StartCoroutine(WaitTenSecondsAndSpawn(boostSpawners.Length));
         }
 
         base.OnMasterClientSwitched(newMasterClient);
