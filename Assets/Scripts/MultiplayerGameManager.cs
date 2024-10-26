@@ -30,7 +30,7 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
     [SerializeField] private SpawnPoint[] spawnPoints;
 
     [Header("Boost Spawners")]
-    [SerializeField] private BoostSpawner[] boostSpawners;
+    [SerializeField] private BoostSpawnPoint[] boostSpawners;
 
     [Header("Characters")]
     [SerializeField] private SelectableCharacter[] characters;
@@ -50,7 +50,7 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             SetNextSpawnPoint();
-            StartCoroutine(nameof(WaitTenSecondsAndSpawn));
+            StartCoroutine((WaitTenSecondsAndSpawn(boostSpawners.Length)));
         }
     }
 
@@ -90,9 +90,9 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
         }
     }
 
-    private BoostSpawner GetRandomBoostSpawner()
+    private BoostSpawnPoint GetRandomBoostSpawner()
     {
-        List<BoostSpawner> availableBoostSpawners = new();
+        List<BoostSpawnPoint> availableBoostSpawners = new();
 
         foreach (var spawner in boostSpawners)
         {
@@ -112,7 +112,7 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
         return availableBoostSpawners[randomBoostSpawnerIndex];
     }
 
-    private void SpawnBooster(BoostSpawner boost)
+    private void SpawnBooster(BoostSpawnPoint boost)
     {
         if (boost != null)
         {
@@ -155,7 +155,9 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
             SpawnBooster(GetRandomBoostSpawner());
             SetNextSpawnPoint();
             spawnCount++;
-            yield return new WaitForSeconds(10f);
+            if(maxSpawns == 0)
+                maxSpawns = boostSpawners.Length;
+            yield return new WaitForSeconds(1f);
         }
     }
 

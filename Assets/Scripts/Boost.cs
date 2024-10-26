@@ -1,21 +1,22 @@
 using Photon.Pun;
 using UnityEngine;
 
-public class Boost : MonoBehaviour
+public class Boost : MonoBehaviourPun
 {
-    public BoostSpawner spawner;
-    /*private void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Player"))
-        {
-            Debug.Log("collided");
-            spawner.FreeSpawn();
-            PhotonNetwork.Destroy(gameObject);
-        }
-    }*/
+    private const string DESTROY_RPC = nameof(NetworkDestroy);
+    public BoostSpawnPoint spawner;
+
     public void Collect()
     {
-        spawner.FreeSpawn();
-        PhotonNetwork.Destroy(gameObject);
+        if (spawner != null && PhotonNetwork.IsMasterClient)
+            spawner.FreeSpawn();
+
+        photonView.RPC(DESTROY_RPC, RpcTarget.All);
+    }
+
+    [PunRPC]
+    private void NetworkDestroy()
+    {
+        Destroy(gameObject);
     }
 }

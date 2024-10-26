@@ -1,7 +1,7 @@
 ﻿using System;
 using UnityEngine;
 
-public class BoostSpawner: MonoBehaviour
+public class BoostSpawnPoint : MonoBehaviour
 {
     public int Id = 0;
         
@@ -20,7 +20,7 @@ public class BoostSpawner: MonoBehaviour
 
     private void OnDrawGizmos()
     {
-        Gizmos.color = Color.yellow;
-        Gizmos.DrawSphere(transform.position, 1f); 
+        Gizmos.color = Color.blue;
+        Gizmos.DrawSphere(transform.position,1f); 
     }
 }

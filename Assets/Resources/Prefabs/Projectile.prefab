@@ -147,7 +147,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   meshRenderer: {fileID: 8426755560014499439}
-  collider: {fileID: 7373074331110978036}
+  colliders: {fileID: 0}
   speed: 20
   lifeTime: 10
 --- !u!114 &5478245263387487806

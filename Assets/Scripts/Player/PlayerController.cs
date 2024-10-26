@@ -53,6 +53,14 @@ public class PlayerController : MonoBehaviourPunCallbacks, IPunObservable
         }
     }
 
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Boost"))
+        {
+            other.gameObject.GetComponent<Boost>().Collect();
+        }
+    }
+
     private void Start()
     {
         _cachedCamera = Camera.main;
