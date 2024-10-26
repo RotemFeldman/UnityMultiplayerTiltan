@@ -50,7 +50,7 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             SetNextSpawnPoint();
-            StartCoroutine((WaitTenSecondsAndSpawn()));
+            StartCoroutine((WaitTenSecondsAndSpawn(boostSpawners.Length)));
         }
     }
 
@@ -147,15 +147,15 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
         _myPlayerController.enabled = false;
     }
 
-    private IEnumerator WaitTenSecondsAndSpawn()
+    private IEnumerator WaitTenSecondsAndSpawn(int maxSpawns)
     {
-        //int spawnCount = 0;
-        while (true)
+        int spawnCount = 0;
+        while (spawnCount < maxSpawns)
         {
             SpawnBooster(GetRandomBoostSpawner());
             SetNextSpawnPoint();
-            //spawnCount++;
-            yield return new WaitForSeconds(1f);
+            spawnCount++;
+            yield return new WaitForSeconds(10f);
         }
     }
 
@@ -265,7 +265,7 @@ public class MultiplayerGameManager : MonoBehaviourPunCallbacks
         if (PhotonNetwork.IsMasterClient)
         {
             SetNextSpawnPoint();
-            StartCoroutine(WaitTenSecondsAndSpawn());
+            StartCoroutine(WaitTenSecondsAndSpawn(boostSpawners.Length));
         }
 
         base.OnMasterClientSwitched(newMasterClient);
